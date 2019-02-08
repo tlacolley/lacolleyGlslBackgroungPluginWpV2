@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEA,WAAW;EACP,QAAQ,EAAE,KAAK;EAEf,MAAM,EAAE,KAAK;EACb,KAAK,EAAE,KAAK;EACZ,OAAO,EAAE,EAAE",
+"sources": ["scss/styleBgGlsl.scss"],
+"names": [],
+"file": "styleBgGlsl.css"
+}

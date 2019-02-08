@@ -1,0 +1,25 @@
+.adminPluginBgGlslCanvas {
+  text-align: center;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); }
+  .adminPluginBgGlslCanvas h1 {
+    grid-column: 1/3; }
+  .adminPluginBgGlslCanvas #formBgGlslPlugin {
+    display: flex;
+    flex-direction: column;
+    text-align: center; }
+    .adminPluginBgGlslCanvas #formBgGlslPlugin label {
+      text-align: center; }
+    .adminPluginBgGlslCanvas #formBgGlslPlugin button[type="submit"] {
+      margin-top: 1rem;
+      width: 25%; }
+
+@media screen and (max-width: 1300px) {
+  .adminPluginBgGlslCanvas {
+    display: flex;
+    flex-direction: column; }
+    .adminPluginBgGlslCanvas #formBgGlslPlugin {
+      padding: 0 10rem; } }
+
+/*# sourceMappingURL=adminBgGlsl.css.map */
