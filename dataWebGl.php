@@ -2,24 +2,22 @@
 // =====================================
 //  TO DO 
 // Expression reguliere 
-//  Uninstall from Base plugin 
+
 // ================================
 //  Object Data for all DB query 
   class DataWebGl{
     // Array for create db col name
-    private static $arrayCol= ["name VARCHAR(255)NOT NULL","textFrag TEXT","script TEXT","style TEXT","used BOOL NOT NULL DEFAULT false"];
     //  In construct create table with the col values
     public static function createTable(){
+        // If function in private out of CreateTable Generate an error during activation
+        static $arrayCol= ["name VARCHAR(255)NOT NULL","textFrag TEXT","script TEXT","style TEXT","used BOOL NOT NULL DEFAULT false"];
         global $wpdb;
-       
         $column = "";
         // Verifier This or self 
         foreach($arrayCol as $col=>$val){ 
                     $column = $column.",".$val;
                 };
-
-        $query = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."glsl_background (id INT AUTO_INCREMENT PRIMARY KEY$column)";
-        
+        $query = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."glsl_background (id INT AUTO_INCREMENT PRIMARY KEY $column)"; 
         $wpdb->query($query);
 
  }
@@ -28,7 +26,6 @@
         global $wpdb;
         $query = "DROP TABLE IF EXISTS ".$wpdb->prefix."glsl_background";
         $wpdb->query($query);
-
     }
  
     // Function saveDB for save or update values in DB
@@ -60,14 +57,12 @@
 
             $arrayToinsert = array_combine($colName,$array);   
             $wpdb->insert("{$wpdb->prefix}glsl_background", $arrayToinsert);    
-
             echo 'Code uploaded successfully';
 
         }
         // If row exist, Update the row and set used True, It's use only for select the BG
         else {
             $optionSelect = $array["name"];
-
             $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE used = 1");
             if($row){
                 
@@ -86,7 +81,6 @@
                 $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$optionSelect}'");
                 $query =  "UPDATE {$wpdb->prefix}glsl_background SET used = '1' WHERE id = '{$row->id}'";
                 $wpdb->query($query);
-            
             }
         } 
 
@@ -105,7 +99,6 @@
         global $wpdb;
         $queryname = "SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$name}'";
         $object =  $wpdb->get_results($queryname);
-
         $result =  json_decode(json_encode($object[0]), True);
         return $result;
     }
@@ -114,7 +107,6 @@
         global $wpdb;
         $query = "SELECT * FROM {$wpdb->prefix}glsl_background WHERE used = '1'";
         $result = $wpdb->get_results($query);
-
         return $result;
     }
     // Function for get all the row from the DB
@@ -127,9 +119,6 @@
             $listArray[] = $row;
         };
         return $listArray;
-
     }
-
-
 
 }?>

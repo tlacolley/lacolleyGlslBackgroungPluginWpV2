@@ -2,18 +2,19 @@
 // defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 // The Admin Object, It's used for all admin display, function.
 class Background_Glsl_admin{
+
     public function __construct()
     {
         // add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action( 'admin_enqueue_scripts', array($this,'enqueue_admin_style'),50 );
         
     } 
+
     public function enqueue_admin_style()
     {     
         wp_enqueue_style( 'styleBgGlslAdmin',plugins_url('css/adminBgGlsl.css', __FILE__) );   
         wp_enqueue_script( 'enqueue_GlslCanvas', plugins_url('script/GlslCanvas.js', __FILE__) ); 
         wp_enqueue_script( 'enqueue_own_js', plugins_url('script/scriptCanvas.js', __FILE__), array( 'jquery' ) ); 
- 
     }
 
     public function add_admin_menu()
@@ -24,7 +25,6 @@ class Background_Glsl_admin{
     public function menu_html()
     {
     $plugin = new Lacolley_Glsl_Background_Plugin();
-
     ?>
           <!-- Display admin form for save code Glsl  -->
         <section class="adminPluginBgGlslCanvas">
@@ -72,7 +72,6 @@ class Background_Glsl_admin{
          <?php
       
     }
-
 
     public function listBG($array){
         ?> <ul>
