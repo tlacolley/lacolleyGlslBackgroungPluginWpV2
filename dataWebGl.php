@@ -1,14 +1,20 @@
 <?php
-class DataWebGl{
-
-    public $arrayCol= ["name VARCHAR(255)NOT NULL","textFrag TEXT","script TEXT","style TEXT","used BOOL NOT NULL DEFAULT false"];
-   
-    public function __construct()
-    {
+// =====================================
+//  TO DO 
+// Expression reguliere 
+//  Uninstall from Base plugin 
+// ================================
+//  Object Data for all DB query 
+  class DataWebGl{
+    // Array for create db col name
+    private static $arrayCol= ["name VARCHAR(255)NOT NULL","textFrag TEXT","script TEXT","style TEXT","used BOOL NOT NULL DEFAULT false"];
+    //  In construct create table with the col values
+    public static function createTable(){
         global $wpdb;
        
         $column = "";
-        foreach($this->arrayCol as $col=>$val){ 
+        // Verifier This or self 
+        foreach($arrayCol as $col=>$val){ 
                     $column = $column.",".$val;
                 };
 
@@ -16,43 +22,20 @@ class DataWebGl{
         
         $wpdb->query($query);
 
-
  }
+    // Function for delete the Table in DB 
+    public static function deleteTable(){
+        global $wpdb;
+        $query = "DROP TABLE IF EXISTS ".$wpdb->prefix."glsl_background";
+        $wpdb->query($query);
+
+    }
  
-
-
-    // public function save(){
-
-    //     if (isset($_POST['textFrag']) && !empty($_POST['textFrag'])&& !empty($_POST['nameFrag'])) {
-    //         global $wpdb;
-    //         $name = $_POST['nameFrag'];
-    //         $textFrag = $_POST['textFrag'];
-    //         $script = $_POST['scriptInput'];
-    //         $style = $_POST['styleInput'];
-
-    //         $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '$name'");
-    //         if (is_null($row)) {     
-    //             $wpdb->insert("{$wpdb->prefix}glsl_background", array('name' => $name, 'textFrag'=>$textFrag,'script'=>$script,'style'=>$style));
-
-    //             echo 'Code uploaded successfully';
-    //         }
-    //         else {
-    //             echo 'This name is use. Choose another';
-    //         } 
-    //     }
-    //     else{
-    //         echo 'You should enter a  name !!';
-    //     } 
-
-
-    // }
-
-    
-
-    public function  saveDB($array){
+    // Function saveDB for save or update values in DB
+    public static function  saveDB($array){
 
         global $wpdb;
-// =======Get the Name from DB table With out Id and last column=======
+// =======Get the Name from DB table Without Id and last column (bool)=======
         $colNameDb = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '.$wpdb->prefix.glsl_background'";
         $showCol = "SHOW COLUMNS FROM ".$wpdb->prefix."glsl_background"."";
 
@@ -63,74 +46,79 @@ class DataWebGl{
         };
         array_pop($colName);
         array_shift($colName);
-        
+        //  Condition for select the name between both form( create form or selectBG from) in display_admin_plugin.php
+        if($array["nameFrag"]){
+            $nameSearch = $array["nameFrag"];
+        }
+        else if($array["name"]){
+            $nameSearch = $array["name"];
+        }
+        // Query for see if row with the name exist or not
+        $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$nameSearch}'");
+        // If row doesn't exist, Create in insert form values in DB 
+        if (is_null($row)) {   
 
-
-        $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$array["nameFrag"]}'");
-
-        if (is_null($row)) {     
-
-            
-            // array(4) { ["nameFrag"]=> string(6) "Hello " ["textFrag"]=> string(15) "0inuipr bnpetr " ["scriptInput"]=> string(20) "g grtgtr g rt tr rt " ["styleInput"]=> string(0) "" } 
-
-            $arrayToinsert = [];
-            foreach($colName as $newkey){
-
-                $arrayToinsert[$newkey]=0;
-
-            }
-            // var_dump($arrayToinsert);
-            // die;
-            foreach( $arrayToinsert as  $value){
-                // var_dump($key);
-                // var_dump($value);
-                foreach($colName as $newkey){
-
-                $arrayToinsert[$newkey]= $value;
-
-                }
-            }
-
-            var_dump($arrayToinsert);
-            die;
-
-            $wpdb->insert("{$wpdb->prefix}glsl_background", array('name' => $array["name"],));
-
+            $arrayToinsert = array_combine($colName,$array);   
+            $wpdb->insert("{$wpdb->prefix}glsl_background", $arrayToinsert);    
 
             echo 'Code uploaded successfully';
+
         }
+        // If row exist, Update the row and set used True, It's use only for select the BG
+        else {
+            $optionSelect = $array["name"];
+
+            $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE used = 1");
+            if($row){
+                
+            //    Change Boolean True to False for old Background 
+                $query =  "UPDATE {$wpdb->prefix}glsl_background SET used = 0 WHERE id = '{$row->id}'";
+                $wpdb->query($query);
         
-        // else {
-        //     $query =  "UPDATE {$wpdb->prefix}glsl_background SET name = '{$array["name"]}'WHERE id = '{$array["id"]}'";
-        //     echo 'Update Name ';
+            // Set Boolean true for new background selected
+                $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$optionSelect}'");
+                $query =  "UPDATE {$wpdb->prefix}glsl_background SET used = '1' WHERE id = '{$row->id}'";
+                $wpdb->query($query);
+        
+                //  Finir le choix dans la db Du backGround 
+            }
+            else{    
+                $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$optionSelect}'");
+                $query =  "UPDATE {$wpdb->prefix}glsl_background SET used = '1' WHERE id = '{$row->id}'";
+                $wpdb->query($query);
+            
+            }
+        } 
 
-        //     // $query =" UPDATE {$wpdb->prefix}glsl_background SET $arra"
-        // } 
+    }
 
-        }
-
-    public function delete($idSelect){
+    // Function for delete the row with the ID( It's not use yet)
+    public static function delete($idSelect){
         global $wpdb;
         $query = "DELETE * FROM {$wpdb->prefix}glsl_background WHERE id = '{$idSelect}'";
         $element = $wpdb->query($query);
         return "Element deleted";
     }
 
-    public function read($name){
+    // Function read for the name of the row, The output it's an array.
+    public static function read($name){
         global $wpdb;
-        $name;
         $queryname = "SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$name}'";
-        $result =  $wpdb->get_results($queryname);
-        if(count($result)>1){
-            // echo"Toomuch ";
-            return $result;
-        }
-        else{
-            return $result[0];
-        }
-    }
+        $object =  $wpdb->get_results($queryname);
 
-    public function listAll(){
+        $result =  json_decode(json_encode($object[0]), True);
+        return $result;
+    }
+    // Function for get the BG who is selected. Query on the bool used.
+    public static function selectedBG(){
+        global $wpdb;
+        $query = "SELECT * FROM {$wpdb->prefix}glsl_background WHERE used = '1'";
+        $result = $wpdb->get_results($query);
+
+        return $result;
+    }
+    // Function for get all the row from the DB
+    public static function listAll(){
         global $wpdb;
         $query = "SELECT * FROM {$wpdb->prefix}glsl_background";
         $result = $wpdb->get_results($query);
