@@ -5,7 +5,6 @@ class Background_Glsl_front{
     {
         add_action( 'wp_enqueue_scripts', array($this,'enqueue_front_script'),50 );
         add_action( 'wp_enqueue_scripts', array($this,'enqueue_front_style'),50 );
-
     }
 
     public function enqueue_front_script() 

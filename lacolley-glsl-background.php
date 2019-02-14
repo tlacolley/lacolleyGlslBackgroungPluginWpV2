@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Lacolley Glsl background V2 
+Plugin Name: Lacolley Glsl background V4
 Description: Plugin for save Glsl code in DB and display this code in Background
-Version: 0.3
+Version: 0.4
 Author: Tlacolley
 */
 // defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
@@ -85,6 +85,7 @@ if (isset($_POST['nameFrag']) && !empty($_POST['nameFrag'])){
 
 
 }
+
 
 
 

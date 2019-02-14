@@ -14,7 +14,8 @@ class Background_Glsl_admin{
     {     
         wp_enqueue_style( 'styleBgGlslAdmin',plugins_url('css/adminBgGlsl.css', __FILE__) );   
         wp_enqueue_script( 'enqueue_GlslCanvas', plugins_url('script/GlslCanvas.js', __FILE__) ); 
-        wp_enqueue_script( 'enqueue_own_js', plugins_url('script/scriptCanvas.js', __FILE__), array( 'jquery' ) ); 
+        // Canvas for Glsl from scriptAjax.js is Create in page with #page
+        wp_enqueue_script( 'enqueue_own_js', plugins_url('script/scriptAjax.js', __FILE__), array( 'jquery' ),true ); 
     }
 
     public function add_admin_menu()
@@ -25,6 +26,13 @@ class Background_Glsl_admin{
     public function menu_html()
     {
     $plugin = new Lacolley_Glsl_Background_Plugin();
+    $selectedBg ;
+    if( DataWebGl::selectedBG()){
+        $selectedBg =  DataWebGl::selectedBG();
+        $selectedBg = json_decode(json_encode($selectedBg[0]), True);
+
+        
+    };
     ?>
           <!-- Display admin form for save code Glsl  -->
         <section class="adminPluginBgGlslCanvas">
@@ -33,13 +41,13 @@ class Background_Glsl_admin{
                 <h2> Save your Glsl Here  </h2>
                 <form name= "formBgGlslPlugin" id="formBgGlslPlugin" enctype="multipart/form-data" action="" method="post">
                     <label for="nameFrag">Name of file</label>
-                    <input type="text" name="nameFrag">
+                    <input type="text" name="nameFrag" value="<?php echo $selectedBg["name"] ?>">
                     <label for="textFrag">Your Frag Code Here</label>
-                    <textarea name="textFrag" id="textFragInput" cols="100%" rows="8" ></textarea>
+                    <textarea name="textFrag" id="textFragInput" cols="100%" rows="8" ><?php echo $selectedBg["textFrag"] ?></textarea>
                     <label for="textFrag">Your Script Code Here</label>
-                    <textarea name="scriptInput" id="scriptInput" cols="100%" rows="8" ></textarea>
+                    <textarea name="scriptInput" id="scriptInput" cols="100%" rows="8" ><?php echo $selectedBg["script"] ?></textarea>
                     <label for="textFrag">Your Style Code Here</label>
-                    <textarea name="styleInput" id="styleInput" cols="100%" rows="8" ></textarea>
+                    <textarea name="styleInput" id="styleInput" cols="100%" rows="8" ><?php echo $selectedBg["style"] ?></textarea>
                     <button type="submit">Submit</button>
                 </form>
 
