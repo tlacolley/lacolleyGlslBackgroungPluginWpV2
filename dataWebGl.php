@@ -2,7 +2,7 @@
 // =====================================
 //  TO DO 
 // Expression reguliere 
-
+//  Refaire la Function Save de la db et Cree la function Update field;
 // ================================
 //  Object Data for all DB query 
   class DataWebGl{
@@ -10,7 +10,7 @@
     //  In construct create table with the col values
     public static function createTable(){
         // If function in private out of CreateTable Generate an error during activation
-        static $arrayCol= ["name VARCHAR(255)NOT NULL","textFrag TEXT","script TEXT","style TEXT","used BOOL NOT NULL DEFAULT false"];
+        static $arrayCol= ["name VARCHAR(255)NOT NULL","textFrag TEXT","script TEXT","style TEXT","copyrights VARCHAR(255)","used BOOL NOT NULL DEFAULT false"];
         global $wpdb;
         $column = "";
         // Verifier This or self 
@@ -29,13 +29,24 @@
     }
  
     // Function saveDB for save or update values in DB
+
     public static function  saveDB($array){
-
         global $wpdb;
-// =======Get the Name from DB table Without Id and last column (bool)=======
-        $colNameDb = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '.$wpdb->prefix.glsl_background'";
-        $showCol = "SHOW COLUMNS FROM ".$wpdb->prefix."glsl_background"."";
+        // Query for get the row from the id 
+        $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE id = '{$array["inputId"]}'");
+        if($row){
+            $query =  "UPDATE {$wpdb->prefix}glsl_background SET name = '{$array["nameFrag"]}',
+            textFrag = '{$array["textFrag"]}', script = '{$array["scriptInput"]}',
+            style = '{$array["styleInput"]}', copyrights = '{$array["copyInput"]}' WHERE id = '{$row->id}'";
+            $wpdb->query($query);
+    }
 
+
+    }
+
+    public static function create($array){
+        global $wpdb;
+        $showCol = "SHOW COLUMNS FROM ".$wpdb->prefix."glsl_background"."";
         $resultColName= $wpdb->get_results($showCol);
         $colName=[];
         foreach($resultColName as $col){
@@ -43,62 +54,51 @@
         };
         array_pop($colName);
         array_shift($colName);
-        //  Condition for select the name between both form( create form or selectBG from) in display_admin_plugin.php
-        if($array["nameFrag"]){
-            $nameSearch = $array["nameFrag"];
-        }
-        else if($array["name"]){
-            $nameSearch = $array["name"];
-        }
-        // Query for see if row with the name exist or not
-        $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$nameSearch}'");
-        // If row doesn't exist, Create in insert form values in DB 
-        if (is_null($row)) {   
+        array_shift($array);
 
-            $arrayToinsert = array_combine($colName,$array);   
-            $wpdb->insert("{$wpdb->prefix}glsl_background", $arrayToinsert);    
-            echo 'Code uploaded successfully';
+        $arrayToinsert = array_combine($colName,$array);   
+        $wpdb->insert("{$wpdb->prefix}glsl_background", $arrayToinsert);    
+        $message = "Code uploaded successfully";
+        echo "<script type='text/javascript'>alert('$message');</script>";
+    }
+
+    // Function for select an active Bg or change 
+    public static function updateSelectBg($idOptionselect){
+        global $wpdb;
+        // Update the row and set used True, It's use only for select the BG
+        $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE used = 1");
+        if($row){
+        //    Change Boolean True to False for old Background 
+            $query =  "UPDATE {$wpdb->prefix}glsl_background SET used = 0 WHERE id = '{$row->id}'";
+            $wpdb->query($query);
+    
+        // Set Boolean true for new background selected
+        $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE id = '{$idOptionselect}'");
+        $query =  "UPDATE {$wpdb->prefix}glsl_background SET used = '1' WHERE id = '{$row->id}'";
+        $wpdb->query($query);
+        }
+        // If it's the first select set True the bool used
+        else{    
+            $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE id = '{$idOptionselect}'");
+            $query =  "UPDATE {$wpdb->prefix}glsl_background SET used = '1' WHERE id = '{$row->id}'";
+            $wpdb->query($query);
 
         }
-        // If row exist, Update the row and set used True, It's use only for select the BG
-        else {
-            $optionSelect = $array["name"];
-            $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE used = 1");
-            if($row){
-                
-            //    Change Boolean True to False for old Background 
-                $query =  "UPDATE {$wpdb->prefix}glsl_background SET used = 0 WHERE id = '{$row->id}'";
-                $wpdb->query($query);
-        
-            // Set Boolean true for new background selected
-                $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$optionSelect}'");
-                $query =  "UPDATE {$wpdb->prefix}glsl_background SET used = '1' WHERE id = '{$row->id}'";
-                $wpdb->query($query);
-        
-                //  Finir le choix dans la db Du backGround 
-            }
-            else{    
-                $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$optionSelect}'");
-                $query =  "UPDATE {$wpdb->prefix}glsl_background SET used = '1' WHERE id = '{$row->id}'";
-                $wpdb->query($query);
-            }
-        } 
-
     }
 
     // Function for delete the row with the ID( It's not use yet)
     public static function delete($idSelect){
         global $wpdb;
-        $query = "DELETE * FROM {$wpdb->prefix}glsl_background WHERE id = '{$idSelect}'";
+        $query = "DELETE  FROM {$wpdb->prefix}glsl_background WHERE id = '{$idSelect}'";
         $element = $wpdb->query($query);
-        return "Element deleted";
+        
     }
 
     // Function read for the name of the row, The output it's an array.
-    public static function read($name){
+    public static function read($idSelect){
         global $wpdb;
-        $queryname = "SELECT * FROM {$wpdb->prefix}glsl_background WHERE name = '{$name}'";
-        $object =  $wpdb->get_results($queryname);
+        $query = "SELECT * FROM {$wpdb->prefix}glsl_background WHERE id = '{$idSelect}'";
+        $object =  $wpdb->get_results($query);
         $result =  json_decode(json_encode($object[0]), True);
         return $result;
     }

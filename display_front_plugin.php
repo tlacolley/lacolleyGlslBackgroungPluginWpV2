@@ -42,6 +42,9 @@ class Background_Glsl_front{
              );
             //  Wp function for return a Json formated Array 
             wp_send_json($array);
+            die;
         }
+
+        
 }
 ?>

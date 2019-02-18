@@ -1,25 +1,51 @@
-.adminPluginBgGlslCanvas {
-  text-align: center;
-  height: 100%;
+.contain {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); }
-  .adminPluginBgGlslCanvas h1 {
-    grid-column: 1/3; }
-  .adminPluginBgGlslCanvas #formBgGlslPlugin {
+  grid-template-columns: repeat(2, 50%);
+  grid-gap: 1rem;
+  padding: 0 2rem; }
+  .contain h2 {
+    font-size: 1.2rem; }
+  .contain #containCreateForm p {
+    display: inline; }
+  .contain #containCreateForm #formBgGlslPlugin {
     display: flex;
     flex-direction: column;
-    text-align: center; }
-    .adminPluginBgGlslCanvas #formBgGlslPlugin label {
+    text-align: center;
+    width: 100%; }
+    .contain #containCreateForm #formBgGlslPlugin label {
       text-align: center; }
-    .adminPluginBgGlslCanvas #formBgGlslPlugin button[type="submit"] {
+    .contain #containCreateForm #formBgGlslPlugin button[type="submit"] {
       margin-top: 1rem;
       width: 25%; }
+  .contain .listGlsl {
+    padding: 1rem 2rem; }
+    .contain .listGlsl li {
+      display: flex;
+      justify-content: start;
+      line-height: normal; }
+      .contain .listGlsl li button {
+        margin-left: auto; }
+
+.hidden {
+  opacity: 0;
+  display: none; }
+
+.visible {
+  opacity: 1;
+  display: block; }
+
+.listbtnBg {
+  font-size: 2rem; }
+
+.selectedList {
+  text-decoration: underline; }
+  .selectedList:before {
+    content: "Active: ";
+    white-space: pre; }
 
 @media screen and (max-width: 1300px) {
-  .adminPluginBgGlslCanvas {
+  .contain {
     display: flex;
-    flex-direction: column; }
-    .adminPluginBgGlslCanvas #formBgGlslPlugin {
-      padding: 0 10rem; } }
+    flex-direction: column; } }
 
 /*# sourceMappingURL=adminBgGlsl.css.map */

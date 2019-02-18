@@ -1,29 +1,34 @@
-
-
- jQuery.post(
-    ajaxurl,
-    {
-        'action': 'select_ajax',
-        'param': 1
-    },
-    function(response){
-
-    }
-    )
-
-
-
 jQuery(document).ready(function(){
-// ---------Variables--------
+    // ---------Variables--------
     var btnAdd = jQuery("#addBg");
     var btnDelete = jQuery(".btnDelete");
     var listGlsl =jQuery(".listGlsl");
     var itemsList = jQuery(".listbtnBg");
-
+    
     var createForm = jQuery("#containCreateForm");
     var contain = jQuery(".adminPluginBgGlslCanvas");
+    
+    
+    // Check if a Bg is used and fild the form 
 
-
+  jQuery.post(
+     ajaxurl,
+     {
+         'action': 'selected_bg',
+     },
+     function(response){
+        jQuery('#idBgObject').val(response["id"]);        
+        jQuery('input[name="nameFrag"]').val(response["name"]);                
+        jQuery('#textFragInput').val(response["textFrag"]);
+        jQuery('#scriptInput').val(response["script"]);
+        jQuery('#styleInput').val(response["style"]);
+        jQuery('input[name="copyInput"]').val(response["copyrights"]);      
+        
+        jQuery("#listBg_"+response["id"]).addClass("selectedList");
+        
+     }
+     )
+    
 // Function on Click button Add
     btnAdd.click(function(){
         createForm.find("input[type=text],input[type=hidden], textarea").val("");
@@ -33,7 +38,7 @@ jQuery(document).ready(function(){
 // Function on Click button Edit
     itemsList.click(function(){
         var idList = this.id; 
-        var id =  idList[idList.length -1];
+        var id =  idList.replace('listBg_', '');;
         id = parseInt(id)
         
         jQuery.post(

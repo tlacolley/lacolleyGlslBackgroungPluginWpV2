@@ -33,6 +33,17 @@ class Lacolley_Glsl_Background_Plugin{
     {
         DataWebGl::createTadeleteTableble();
     }
+    // Function to send the create request to the Db
+    public static function create($formInputs){
+        $formArray = []; 
+        foreach($formInputs as $key => $value) {
+            $formArray[$key] = $value;
+            if($value==Null){
+                $formArray[$key]=Null;
+            }
+        }
+        DataWebGl::create($formArray);
+    }
 
     public static function save($saveGlsl){
         // Put the condition out save() and use variables 
@@ -44,10 +55,13 @@ class Lacolley_Glsl_Background_Plugin{
             }
         }
         DataWebGl::saveDB($formArray);
+        
+
+
     }
 
-    public static function read($name){ 
-        $result = DataWebGl::read($name);
+    public static function read($id){ 
+        $result = DataWebGl::read($id);
         return $result;
     }
 
@@ -56,11 +70,6 @@ class Lacolley_Glsl_Background_Plugin{
         return $arraylist;
     }
 
-    public function selectBG($selectBgStr){
-        global $wpdb;  
-        $selectBg = DataWebGl::read($selectBgStr);           
-        DataWebGl::saveDB($selectBg); 
-    }
 
     public function selectedBG(){   
         $result = DataWebGl::selectedBG();
@@ -74,25 +83,55 @@ $plugin->admin = new Background_Glsl_admin();
 $plugin->front = new Background_Glsl_front();
 
 
-if (isset($_POST['selectBG']) && !empty($_POST['selectBG'])) {
-    $plugin->selectBG($_POST['selectBG']);
-}
 
-if (isset($_POST['nameFrag']) && !empty($_POST['nameFrag'])){
+
+// Create the Background Glsl, check if name not empty
+// echo `<script language="javascript">\
+//   if (confirm("Are you sure to update ?")) {\
+
+//   };\
+//   return false;\
+//   </script>`;
+  
+if (isset($_POST['inputId']) && !empty($_POST['inputId'])){
+
+    // echo "onclick='return confirm(\'Are you sure you want to submit this form?\');'";
     $plugin->save($_POST);
 
-}else{
-
-
+  }
+else if(isset($_POST['nameFrag']) && !empty($_POST['nameFrag'])){
+    $plugin->create($_POST);
 }
 
 
 
 
-    // ======================New Methode=================
 
-    add_action('wp_enqueue_scripts',function() use (&$plugin) {$plugin->front->ajax_load_scripts();},50);
+    // ======================Hooks Ajax=================
 
-    add_action( 'wp_ajax_mon_action', function() use (&$plugin) {$plugin->front->responseAjaxDisplay();} );
-    add_action( 'wp_ajax_nopriv_mon_action', function() use (&$plugin) {$plugin->front->responseAjaxDisplay();} );
+// Hooks Ajax Front
+add_action('wp_enqueue_scripts',function() use (&$plugin) {$plugin->front->ajax_load_scripts();},50);
+add_action( 'wp_ajax_mon_action', function() use (&$plugin) {$plugin->front->responseAjaxDisplay();} );
+add_action( 'wp_ajax_nopriv_mon_action', function() use (&$plugin) {$plugin->front->responseAjaxDisplay();} );
+
+// Hooks Ajax CRUD Admin
+add_action('wp_enqueue_scripts',function() use (&$plugin) {$plugin->admin->ajax_load_scripts_addmin();},50);
+
+
+// Hook for function selected Background Ajax who will fild the form 
+add_action( 'wp_ajax_selected_bg', function() use (&$plugin) {$plugin->admin->selected_bg();} );
+add_action( 'wp_ajax_nopriv_selected_bg', function() use (&$plugin) {$plugin->admin->selected_bg();} );
+
+// Hook for function load text in form to edit Ajax
+add_action( 'wp_ajax_edit_form', function() use (&$plugin) {$plugin->admin->edit_form();} );
+add_action( 'wp_ajax_nopriv_edit_form', function() use (&$plugin) {$plugin->admin->edit_form();} );
+
+// Hook for function select Background Ajax
+add_action( 'wp_ajax_select_bg', function() use (&$plugin) {$plugin->admin->select_bg();} );
+add_action( 'wp_ajax_nopriv_select_bg', function() use (&$plugin) {$plugin->admin->select_bg();} );
+
+// Hook for function delete Ajax
+add_action( 'wp_ajax_delete_bg', function() use (&$plugin) {$plugin->admin->delete_bg();} );
+add_action( 'wp_ajax_nopriv_delete_bg', function() use (&$plugin) {$plugin->admin->delete_bg();});
+
 ?>

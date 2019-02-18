@@ -1,17 +1,59 @@
+// .adminPluginBgGlslCanvas{
+//     text-align: center;
+//     height: 100%;
+//     display: grid;
+//     grid-template-columns: repeat(2,1fr);
+//     h1{
+//         grid-column: 1/3;
+//     }
+//     .saveFrag{
+//     }
+//     #formBgGlslPlugin{
+//         display: flex;
+//         flex-direction: column;
+//         text-align: center;
+//         // padding: 0 10rem;
+//         label{
+//             text-align: center;
+//         }
+//         button[type="submit"]{
+//             margin-top: 1rem;
+//             width: 25%;
+           
+//         }
+//     }
+
+
+// }
+
+// //  Rajouter Glsl shader En admin mini canvas 
+
+
+
 .adminPluginBgGlslCanvas{
-    text-align: center;
-    height: 100%;
+
+
+    // padding: 0 1rem
+}
+
+.contain{
+
     display: grid;
-    grid-template-columns: repeat(2,1fr);
-    h1{
-        grid-column: 1/3;
+    grid-template-columns: repeat(2 ,50%);
+    grid-gap: 1rem;
+    padding: 0 2rem;
+    h2{
+        font-size: 1.2rem;
     }
-    .saveFrag{
-    }
-    #formBgGlslPlugin{
-        display: flex;
+    #containCreateForm{
+        p{
+            display: inline;
+        }
+        #formBgGlslPlugin{
+            display: flex;
         flex-direction: column;
         text-align: center;
+        width: 100%;
         // padding: 0 10rem;
         label{
             text-align: center;
@@ -19,22 +61,56 @@
         button[type="submit"]{
             margin-top: 1rem;
             width: 25%;
-           
+        }
+    }
+    }
+    
+    .listGlsl{
+        // background: lightblue;
+        // border: solid 1px gray;
+        padding: 1rem 2rem;
+        li{
+            display: flex;
+            justify-content: start;
+            line-height: normal;
+            button{
+                margin-left: auto;
+            }
         }
     }
 
 
 }
 
-//  Rajouter Glsl shader En admin mini canvas 
+.hidden{
+    opacity: 0;
+    display: none;
+}
+.visible{
+    opacity: 1;
+    display: block;
+}
+
+.listbtnBg{
+    font-size: 2rem;
+
+}
+.selectedList{
+    text-decoration: underline;
+    &:before{
+        content: "Active: ";
+        white-space: pre;
+    }    
+}
+
 
 
 @media screen and (max-width: 1300px)  {
-   .adminPluginBgGlslCanvas{
+   .contain{
         display: flex;
         flex-direction: column;
         #formBgGlslPlugin{
-            padding: 0 10rem;
+            // padding: 0 10rem;
 
 
         }

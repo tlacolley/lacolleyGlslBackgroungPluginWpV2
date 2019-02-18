@@ -1,0 +1,30 @@
+.contain {
+  display: flex;
+  width: 100%; }
+  .contain #formBgGlslPlugin {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 40%; }
+    .contain #formBgGlslPlugin label {
+      text-align: center; }
+    .contain #formBgGlslPlugin button[type="submit"] {
+      margin-top: 1rem;
+      width: 25%; }
+
+.hidden {
+  opacity: 0;
+  display: none; }
+
+.visible {
+  opacity: 1;
+  display: block; }
+
+.listbtnBg {
+  font-size: 2rem; }
+
+.selectedList {
+  background-color: red;
+  color: blue; }
+
+/*# sourceMappingURL=adminBgGlsl.css.map */
