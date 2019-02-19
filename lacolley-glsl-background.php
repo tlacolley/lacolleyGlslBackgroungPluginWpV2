@@ -31,21 +31,107 @@ class Lacolley_Glsl_Background_Plugin{
 
     public static function uninstall()
     {
-        DataWebGl::createTadeleteTableble();
+        DataWebGl::deleteTable();
     }
+
+    public function saveFile(){
+        for ($i = 1; $i <= 4; $i++) {
+            $i = strval($i);
+            if(isset($_FILES['uploadImg'.$i])){
+                $errors= array();
+                $file_name = $_FILES['uploadImg'.$i]['name'];
+                $file_size =$_FILES['uploadImg'.$i]['size'];
+                $file_tmp =$_FILES['uploadImg'.$i]['tmp_name'];
+                $file_type=$_FILES['uploadImg'.$i]['type'];
+                $tmp = explode('.', $_FILES['uploadImg'.$i]['name']);
+                $file_ext=strtolower(end($tmp));
+                
+                $extensions= array("jpeg","jpg","png");
+                
+                if(in_array($file_ext,$extensions)=== false){
+                $errors[]="extension not allowed, please choose a JPEG or PNG file.";
+                }
+                
+                if($file_size > 2097152){
+                $errors[]='File size must be excately 2 MB';
+                }
+                
+                if(empty($errors)==true){
+
+                if ( ! function_exists( 'wp_handle_upload' ) ) require_once( ABSPATH . 'wp-admin/includes/file.php' );
+                if(!function_exists('wp_get_current_user')) {
+                    include(ABSPATH . "wp-includes/pluggable.php"); 
+                }
+                $uploadedfile = $_FILES['uploadImg'.$i];
+                $upload_overrides = array( 'test_form' => false );
+                add_filter('upload_dir',  array($this,'my_upload_dir') );
+                $movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
+                remove_filter('upload_dir', array($this,'my_upload_dir'));
+
+                if ( $movefile ) {
+                    echo "File is valid, and was successfully uploaded.\n";
+                    // var_dump( $movefile);
+                } else {
+                    echo "Possible file upload attack!\n";
+                }
+                
+                echo "Success";
+            }else{
+                print_r($errors);
+            }
+        }
+    }
+}
+    public function my_upload_dir($upload) {
+
+    $upload['subdir'] = '/img_Glsl' . $upload['subdir'];
+
+    $upload['path']   = $upload['basedir'] . $upload['subdir'];
+
+    $upload['url']    = $upload['baseurl'] . $upload['subdir'];
+
+    // var_dump($upload);
+    // array(6) { ["path"]=> string(77) "/home/ratewar/Codes/FabienLacan/portfolio/wp-content/uploads/img_Glsl/2019/02" 
+    // ["url"]=> string(58) "http://lacan-portfolio/wp-content/uploads/img_Glsl/2019/02" 
+    // ["subdir"]=> string(17) "/img_Glsl/2019/02" 
+    // ["basedir"]=> string(60) "/home/ratewar/Codes/FabienLacan/portfolio/wp-content/uploads"
+    //  ["baseurl"]=> string(41) "http://lacan-portfolio/wp-content/uploads" 
+    // ["error"]=> bool(false) } 
+    // die;
+    return $upload;
+    }
+
+
+
+
     // Function to send the create request to the Db
-    public static function create($formInputs){
+    public static function create($formInputs,$fileInputs){
         $formArray = []; 
+        // var_dump($formInputs);
+        // die;
         foreach($formInputs as $key => $value) {
             $formArray[$key] = $value;
             if($value==Null){
                 $formArray[$key]=Null;
             }
         }
+        foreach($fileInputs as $key => $value) {
+           
+            if($value["name"] != ""){
+                $formArray[$key] =  wp_upload_dir()["subdir"] ."/". $value["name"];
+            }
+            else{
+                $formArray[$key] = Null;
+            }
+
+        }
+        
+
+
         DataWebGl::create($formArray);
     }
 
-    public static function save($saveGlsl){
+    public static function save($saveGlsl,$saveFiles){
         // Put the condition out save() and use variables 
         $formArray = []; 
         foreach($saveGlsl as $key => $value) {
@@ -54,6 +140,16 @@ class Lacolley_Glsl_Background_Plugin{
                 $formArray[$key]=Null;
             }
         }
+        foreach($saveFiles as $key => $value) {
+            if($value["name"] != ""){
+                
+                $formArray[$key] =  wp_upload_dir()["subdir"]."/". $value["name"];
+            }
+            else{
+                $formArray[$key] = Null;
+            }
+        }
+
         DataWebGl::saveDB($formArray);
         
 
@@ -85,27 +181,34 @@ $plugin->front = new Background_Glsl_front();
 
 
 
-// Create the Background Glsl, check if name not empty
 // echo `<script language="javascript">\
 //   if (confirm("Are you sure to update ?")) {\
-
-//   };\
-//   return false;\
-//   </script>`;
-  
+    
+    //   };\
+    //   return false;\
+    //   </script>`;
+    
+// Create the Background Glsl, check if name not empty
 if (isset($_POST['inputId']) && !empty($_POST['inputId'])){
 
     // echo "onclick='return confirm(\'Are you sure you want to submit this form?\');'";
-    $plugin->save($_POST);
+    if(isset($_FILES['uploadImg1']) && !empty($_FILES['uploadImg1'])){
+        $plugin->save($_POST,$_FILES);  
+    }
+    else{
+        $plugin->save($_POST);
+    }
 
   }
 else if(isset($_POST['nameFrag']) && !empty($_POST['nameFrag'])){
-    $plugin->create($_POST);
+    if(isset($_FILES['uploadImg1']) && !empty($_FILES['uploadImg1'])){
+        $plugin->create($_POST,$_FILES);
+    }
+    else{
+        $plugin->create($_POST);
+    }
+
 }
-
-
-
-
 
     // ======================Hooks Ajax=================
 

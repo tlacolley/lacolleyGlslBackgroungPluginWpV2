@@ -32,13 +32,24 @@ class Background_Glsl_front{
             $param = $_POST['param'];
             // Request DB 
             $ajax_query = DataWebGl::selectedBG();
+
             $ajax_query = json_decode(json_encode($ajax_query[0]), True);
+            for($i=0;$i<5;$i++){
+                if($ajax_query["uploadImg".$i] != ""){
+                    $ajax_query["uploadImg".$i] = WP_CONTENT_URL."/uploads".$ajax_query["uploadImg".$i];
+                };
+            };
             // Array from DB 
             $array = array(
                         'name'    =>  $ajax_query["name"],
                         'textFrag'=>  $ajax_query["textFrag"] ,
                         'script'  =>  $ajax_query["script"],
-                        'style'  =>  $ajax_query["style"]
+                        'style'  =>  $ajax_query["style"],
+                        'copyrights'  =>  $ajax_query["copyrights"],
+                        'uploadImg1'  =>  $ajax_query["uploadImg1"],
+                        'uploadImg2'  =>  $ajax_query["uploadImg2"],
+                        'uploadImg3'  =>  $ajax_query["uploadImg3"],
+                        'uploadImg4'  =>  $ajax_query["uploadImg4"]
              );
             //  Wp function for return a Json formated Array 
             wp_send_json($array);

@@ -10,7 +10,7 @@
     //  In construct create table with the col values
     public static function createTable(){
         // If function in private out of CreateTable Generate an error during activation
-        static $arrayCol= ["name VARCHAR(255)NOT NULL","textFrag TEXT","script TEXT","style TEXT","copyrights VARCHAR(255)","used BOOL NOT NULL DEFAULT false"];
+        static $arrayCol= ["name VARCHAR(255)NOT NULL","textFrag TEXT","script TEXT","style TEXT","copyrights VARCHAR(255)","uploadImg1 VARCHAR(255)","uploadImg2 VARCHAR(255)","uploadImg3 VARCHAR(255)","uploadImg4 VARCHAR(255)","used BOOL NOT NULL DEFAULT false"];
         global $wpdb;
         $column = "";
         // Verifier This or self 
@@ -37,7 +37,9 @@
         if($row){
             $query =  "UPDATE {$wpdb->prefix}glsl_background SET name = '{$array["nameFrag"]}',
             textFrag = '{$array["textFrag"]}', script = '{$array["scriptInput"]}',
-            style = '{$array["styleInput"]}', copyrights = '{$array["copyInput"]}' WHERE id = '{$row->id}'";
+            style = '{$array["styleInput"]}', copyrights = '{$array["copyInput"]}',
+            uploadImg1 = '{$array["uploadImg1"]}', uploadImg2 = '{$array["uploadImg2"]}',
+            uploadImg3 = '{$array["uploadImg3"]}', uploadImg4 = '{$array["uploadImg4"]}' WHERE id = '{$row->id}'";
             $wpdb->query($query);
     }
 

@@ -61,15 +61,21 @@ class Background_Glsl_admin{
                     <textarea name="scriptInput" id="scriptInput" cols="100%" rows="8" ></textarea>
                     <label for="textFrag">Your Style Code Here</label>
                     <textarea name="styleInput" id="styleInput" cols="100%" rows="8" ></textarea>
-                    <label for="nameFrag">Copyrights</label>
+                    <label for="uploadImg1">Yours Images</label>
+                    <input type="file" name="uploadImg1" />
+                    <label for="uploadImg2">Yours Images</label>
+                    <input type="file" name="uploadImg2" />
+                    <label for="uploadImg3">Yours Images</label>
+                    <input type="file" name="uploadImg3" />
+                    <label for="uploadImg4">Yours Images</label>
+                    <input type="file" name="uploadImg4" />
+                    <label for="copyInput">Copyrights (to display in footer)</label>
                     <input type="text" name="copyInput" value="">
                     <button type="submit">Submit</button>
                 </form>
             </div>
     <?php
     }
-
-    
 
 
     public function listCanvas(){
@@ -90,7 +96,7 @@ class Background_Glsl_admin{
                 <?php endforeach;?>
             </ul>
         </div>
-            <?php
+    <?php
     }
 
 
@@ -114,7 +120,12 @@ class Background_Glsl_admin{
                     'textFrag'=>  $ajax_query["textFrag"] ,
                     'script'  =>  $ajax_query["script"],
                     'style'  =>  $ajax_query["style"],
-                    'copyrights'=>$ajax_query["copyrights"]
+                    'copyrights'=>$ajax_query["copyrights"],
+                    'uploadImg1'  =>  $ajax_query["uploadImg1"],
+                    'uploadImg2'  =>  $ajax_query["uploadImg2"],
+                    'uploadImg3'  =>  $ajax_query["uploadImg3"],
+                    'uploadImg4'  =>  $ajax_query["uploadImg4"]
+       
          );
         //  Wp function for return a Json formated Array 
         wp_send_json($array);
@@ -131,7 +142,12 @@ class Background_Glsl_admin{
             'textFrag'=>  $ajax_query["textFrag"] ,
             'script'  =>  $ajax_query["script"],
             'style'  =>  $ajax_query["style"],
-            'copyrights'=>$ajax_query["copyrights"]
+            'copyrights'=>$ajax_query["copyrights"],
+            'uploadImg1'  =>  $ajax_query["uploadImg1"],
+            'uploadImg2'  =>  $ajax_query["uploadImg2"],
+            'uploadImg3'  =>  $ajax_query["uploadImg3"],
+            'uploadImg4'  =>  $ajax_query["uploadImg4"]
+
          );
 
         //  Wp function for return a Json formated Array 

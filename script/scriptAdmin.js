@@ -22,7 +22,14 @@ jQuery(document).ready(function(){
         jQuery('#textFragInput').val(response["textFrag"]);
         jQuery('#scriptInput').val(response["script"]);
         jQuery('#styleInput').val(response["style"]);
-        jQuery('input[name="copyInput"]').val(response["copyrights"]);      
+        jQuery('input[name="copyInput"]').val(response["copyrights"]);   
+
+        // console.log(jQuery('input[name="uploadImg1"]').value);
+        
+        // jQuery('input[name="uploadImg1"]').val(response["uploadImg1"]);
+  
+
+
         
         jQuery("#listBg_"+response["id"]).addClass("selectedList");
         
@@ -31,7 +38,7 @@ jQuery(document).ready(function(){
     
 // Function on Click button Add
     btnAdd.click(function(){
-        createForm.find("input[type=text],input[type=hidden], textarea").val("");
+        createForm.find("input[type=text],input[type=hidden], input[type=file], textarea").val("");
         
     });
 
@@ -54,6 +61,8 @@ jQuery(document).ready(function(){
                 jQuery('#scriptInput').val(response["script"]);
                 jQuery('#styleInput').val(response["style"]);
                 jQuery('input[name="copyInput"]').val(response["copyrights"]);
+                
+
             }
             )
 
@@ -69,7 +78,7 @@ jQuery(document).ready(function(){
         var idList = this.id; 
 
         var id =  idList.replace('listBg_', '');;
-        console.log(id);
+        // console.log(id);
     
         jQuery.post(
             ajaxurl,

@@ -12,22 +12,37 @@ function loadGlsl(){
             'param': 1
         },
         function(response){
+            var linkImgs = "";
+            
+            for(var i=1; i<5; i++)
+            {
+                if(response["uploadImg"+i] != ""){
+                    linkImgs += response["uploadImg"+i]+","
+                } 
+            };
+            if(linkImgs.slice(-1)==","){
+                linkImgs = linkImgs.slice(0,-1);  
+            }
+            // console.log(linkImgs);
+
             
             var canvasHtml = '<canvas id="glslCanvas" style="\
             '+response["style"]+'"\
-            width="1920"height="1080" data-textures="/home/ratewar/Codes/FabienLacan/portfolio/wp-content/plugins/lacolley-glsl-background/img/05.jpg"></canvas>'
+            width="1920"height="1080" data-textures="'+linkImgs+'"></canvas>'
             $("body").prepend(canvasHtml);
+            // console.log(canvasHtml);
+            
             
             var canvas = document.getElementById("glslCanvas");
             sandbox = new GlslCanvas(canvas);
 
             eval(response["script"]);
 
- 
+        
             var string_frag_code = response["textFrag"];
             sandbox.load(string_frag_code);
-            console.log("ShaderLoaded");
             
+            $("footer").append(response["copyrights"]);
 
             // function main() {
             //     // Get A WebGL context
